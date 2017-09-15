@@ -1,0 +1,133 @@
+<html>
+
+<head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker|Source+Code+Pro" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Kalam|Permanent+Marker|Source+Code+Pro" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            background-color: azure;
+        }
+        
+        #bodyWrapper {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+        }
+        
+        #randomWrapper {
+            background-color: white;
+            color: black;
+            margin-left: 400px;
+            margin-top: 200px;
+            width: 700px;
+            height: 300px;
+            border-radius: .5px;
+            text-align: center;
+        }
+        
+        #random_quote {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 18px;
+        }
+        
+        #header_quote {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 18px;
+        }
+        
+        #button {
+            font-family: 'Kalam', cursive;
+            background-color: azure;
+            float: left;
+            padding-top: 25px;
+            padding-bottom: 25px;
+            padding-left: 50px;
+            padding-right: 50px;
+            margin: auto;
+        }
+        
+        #tweet {
+            background-color: azure;
+            font-family: 'Kalam', cursive;
+            color: black;
+            text-decoration: none;
+            padding-top: 25px;
+            padding-bottom: 25px;
+            padding-left: 50px;
+            padding-right: 50px;
+            float: right;
+            margin: auto;
+        }
+        
+        .fa fa-twitter {
+            height: 100px;
+            font-size: 50px;
+        }
+
+    </style>
+
+
+</head>
+
+<body>
+
+    <div id="randomWrapper">
+        <h1 id="header_quotes">Random Quotes</h1>
+        <div class="change_textColor" id="random_quote">
+            <i aria-hidden="true" class="fa fa-quote-left"></i>
+        </div>
+        <div id="button2">
+            <p class="change_color" id="button">New Quote</p><a class="change_color" id="tweet">tweet</a>
+        </div>
+    </div>
+
+
+    <script>
+        function randomQuote() {
+            $.ajax({
+                // to get url of api 
+                url: "https://api.forismatic.com/api/1.0/?",
+                //to get datatype
+                dataType: "jsonp",
+                data: "method=getQuote&format=jsonp&lang=en&jsonp=?",
+                success: function(response) {
+                    // gets the random Quote and author
+                    $("#random_quote").html("<p id='random_quote' >" + "  &#10077;" + response.quoteText + " &#10078" + "<br/>&dash; " + response.quoteAuthor + " &dash;</p>");
+                    $("#tweet").attr("href", "https://twitter.com/home/?status=" + response.quoteText + ' (' + response.quoteAuthor + ')');
+                }
+            });
+        }
+        $(function() {
+            randomQuote();
+        });
+        $("#button").click(function() {
+            randomQuote();
+        });
+        $("#button").click(function() {
+            // change color to random color
+            function random_bg_color() {
+                var x = Math.floor(Math.random() * 256);
+                var y = Math.floor(Math.random() * 256);
+                var z = Math.floor(Math.random() * 256);
+                var bgColor = "rgb(" + x + "," + y + "," + z + ")";
+                $(".change_color").css("background-color", bgColor);
+                $(".change_textColor").css("color", bgColor);
+                $("body").css("background-color", bgColor);
+            }
+            random_bg_color()
+        });
+
+    </script>
+
+
+
+</body>
+
+
+
+
+</html>
