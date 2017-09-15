@@ -1,0 +1,106 @@
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <style type=text/css>
+        body {
+            background-color: #2D936C;
+            color: white;
+        }
+        
+        a:link {
+            text-decoration: none;
+            color: black;
+        }
+        
+        a:visited {
+            text-decoration: none;
+            color: white;
+        }
+        
+        li {
+            border: 1px black solid;
+            marign-top: 5px;
+            margin-bottom: 5px;
+            background-color: gray;
+            padding: 5px;
+            list-style-type: none;
+            border-radius: 2px;
+        }
+        
+        .text-centered {
+            text-align: center;
+            font-family: 'Indie Flower', cursive;
+        }
+        
+        #result {
+            margin-top: 5px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+
+        <h1 class="text-centered"> Wikipedia API Search </h1>
+        <h4 class="text-centered"> FCC Front End Development</h4>
+
+        <a href="https://en.wikipedia.org/wiki/Special:Random" target="blank" class="text-centered"> Click on Random article</a>
+
+        <input class="form-control" id="searchInfo">
+        <button id="search" type="button" class="btn btn-primary">Submit </button>
+        <ul id="results">
+
+        </ul>
+    </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#search").click(function() {
+                var searchInfo = $("#searchInfo").val();
+
+                var url =
+                    "https://en.wikipedia.org/w/api.php?action=opensearch&search=" +
+                    searchInfo +
+                    "&format=json&callback=?";
+
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    async: false,
+                    dataType: "json",
+                    success: function(data) {
+                        // Get heading   console.log(data[1][0]);
+                        // Get description console.log(data[2][0]);
+                        // Get link   console.log(data[3][0]);
+                        $("#results").html("");
+
+                        for (var i = 0; i < data[1].length; i++) {
+                            $("#results").prepend(
+                                "<li> <a href=" +
+                                data[3][i] +
+                                ">" +
+                                data[1][i] +
+                                "</a><p>" +
+                                data[2][i] +
+                                "</p></li>"
+                            );
+                        }
+                    },
+
+                    error: function(errorMessage) {
+                        alert("Error");
+                    }
+                });
+            });
+        });
+
+    </script>
+</body>
+
+</html>
