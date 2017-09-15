@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://rawgithub.com/darkskyapp/skycons/master/skycons.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Sedgwick+Ave+Display" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker|Sedgwick+Ave+Display" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <style type="text/css">
+        body {
+            background-color: #4D6A6D;
+            font-family: 'Permanent Marker', cursive;
+            text-align: center;
+            color: white;
+        }
+        
+        .weatherStyle {
+            background-color: #C9ADA1;
+            font-family: 'Open Sans', sans-serif;
+            width: 400px;
+            height: 200px;
+            border-radius: 2px;
+            font-size: 30px;
+            margin: 0 auto;
+            opacity: .7;
+        }
+        
+        #header {
+            text-align: center;
+            color: white;
+            font-size: 30px;
+        }
+
+    </style>
+
+
+</head>
+
+<body>
+
+
+    <p id="header">Weather Forecast for</p>
+
+    <div id="currentDate" class="weatherStyle">
+
+        <div id="date"> </div>
+        <div id="result1"> </div>
+        <div id="result"> </div>
+        <div id="result2"> </div>
+
+        <canvas id="weatherIcon" width="64" height="64"></canvas>
+
+    </div>
+
+
+
+    <div id="currentWeather">
+
+
+
+
+
+    </div>
+
+
+
+    <script type="text/javascript">
+        // getting location information from user 
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+
+
+               // $("#demo1").html("latitude: " + position.coords.latitude + "<br>longitude: " + position.coords.longitude);
+
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+
+                console.log(longitude);
+
+                api_url = 'http://api.openweathermap.org/data/2.5/weather?lat=' +
+                    latitude + '&lon=' +
+                    longitude + '&units=metric&appid=5ca7c9d760da5e90e85a575c47e8a96a';
+                // http://api.openweathermap.org/data/2.5/weather?q=London,uk&callback=test&appid=b1b15e88fa79722
+
+                $.ajax({
+                    url: api_url,
+                    method: 'GET',
+                    success: function(data) {
+
+                        console.log(data);
+
+
+                        var tempC = data.main.temp;
+                        var location = data.name;
+                        var desc = data.weather[0].description;
+                        var country = data.sys.country;
+
+
+                        var tempF = tempC * 9 / 5 + 32;
+
+
+
+                        var icons = new Skycons({
+                            "color": "black"
+                        });
+
+
+
+
+                        $('#header').text("Weather Forecast for " + location + "," + country);
+                        $('#result').text(tempC + 'C');
+                        $('#result').click(function() {
+
+                            $('#result').text(tempF + 'F');
+
+                        });
+
+                        $("#result").dblclick(function() {
+                            $('#result').text(tempC + 'C');
+
+                        });
+
+                        $('#result2').text(desc)
+
+
+
+                        if (desc.indexOf("clear") >= 0) {
+
+                            return icons.set("weatherIcon", Skycons.CLEAR_DAY);
+
+
+                        } else if (desc.indexOf("rain") >= 0) {
+
+                            icons.set("weatherIcon", Skycons.RAIN);
+
+                        } else if (desc.indexOf("cloud") >= 0) {
+
+                            icons.set("weatherIcon", Skycons.CLOUDY);
+
+                        } else if (desc.indexOf("snow") >= 0) {
+
+                            icons.set("weatherIcon", Skycons.SNOW);
+
+                        } else if (desc.indexOf("wind") >= 0) {
+
+                            icons.set("weatherIcon", Skycons.WIND);
+
+                        }
+                        icons.play();
+
+
+                    }
+                });
+
+            });
+
+
+        }
+
+        // getting current date 
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var today = mm + '/' + dd + '/' + yyyy;
+        document.getElementById("date").innerHTML = today;
+
+    </script>
+
+
+
+</body>
+
+
+
+
+
+</html>
